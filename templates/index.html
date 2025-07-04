@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ad Click Predictor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-message">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+
+    <div class="background">
+        <h1 class="title">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Ad Predictor Logo" class="logo-img"></i>
+            Ad Click Predictor
+        </h1>
+        <div class="card">
+            <form action="/predict" method="post" class="form-grid">
+                <div class="form-group">
+                    <label>Ad Headline:</label>
+                    <input type="text" name="ad_topic_line" required
+                    value="{{ form_data['ad_topic_line'] if form_data else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label>Target Gender:</label>
+                    <select name="gender" required>
+                        <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+                        <option value="male" {% if form_data and form_data['gender'] == 'male' %}selected{% endif %}>Male</option>
+                        <option value="female" {% if form_data and form_data['gender'] == 'female' %}selected{% endif %}>Female</option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Time of Day for Ad:</label>
+                    <select name="time_of_day" required>
+                        <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+                        <option value="morning"{% if form_data and form_data['time_of_day'] == 'morning' %}selected{% endif %}>Morning</option>
+                        <option value="afternoon"{% if form_data and form_data['time_of_day'] == 'afternoon' %}selected{% endif %}>Afternoon</option>
+                        <option value="evening"{% if form_data and form_data['time_of_day'] == 'evening' %}selected{% endif %}>Evening</option>
+                        <option value="night"{% if form_data and form_data['time_of_day'] == 'night' %}selected{% endif %}>Night</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Device Type:</label>
+                    <select name="device_type" required>
+                        <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+                        <option value="mobile"{% if form_data and form_data['device_type'] == 'mobile' %}selected{% endif %}>Mobile</option>
+                        <option value="desktop"{% if form_data and form_data['device_type'] == 'desktop' %}selected{% endif %}>Desktop</option>
+                        <option value="tablet"{% if form_data and form_data['device_type'] == 'tablet' %}selected{% endif %}>Tablet</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Audience Interests:</label>
+                    <select name="browsing_history" required>
+                        <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+                        <option value="news"{% if form_data and form_data['browsing_history'] == 'news' %}selected{% endif %}>News</option>
+                        <option value="shopping"{% if form_data and form_data['browsing_history'] == 'shopping' %}selected{% endif %}>Shopping</option>
+                        <option value="entertainment"{% if form_data and form_data['browsing_history'] == 'entertainment' %}selected{% endif %}>Entertainment</option>
+                        <option value="education"{% if form_data and form_data['browsing_history'] == 'education' %}selected{% endif %}>Education</option>
+                        <option value="social media"{% if form_data and form_data['browsing_history'] == 'social media' %}selected{% endif %}>Social Media</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Ad Position on Page:</label>
+                    <select name="ad_position" required>
+                        <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+                        <option value="top"{% if form_data and form_data['ad_position'] == 'top' %}selected{% endif %}>Top</option>
+                        <option value="side"{% if form_data and form_data['ad_position'] == 'side' %}selected{% endif %}>Side</option>
+                        <option value="bottom"{% if form_data and form_data['ad_position'] == 'bottom' %}selected{% endif %}>Bottom</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Age Group:</label>
+                    <select name="age_group" required>
+                        <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+                        <option value="18-24"{% if form_data and form_data['age_group'] == '18-24' %}selected{% endif %}>18-24</option>
+                        <option value="25-34"{% if form_data and form_data['age_group'] == '25-34' %}selected{% endif %}>25-34</option>
+                        <option value="35-44"{% if form_data and form_data['age_group'] == '35-44' %}selected{% endif %}>35-44</option>
+                        <option value="45-54"{% if form_data and form_data['age_group'] == '45-54' %}selected{% endif %}>45-54</option>
+                        <option value="55-64"{% if form_data and form_data['age_group'] == '55-64' %}selected{% endif %}>55-64</option>
+                        <option value="65+"{% if form_data and form_data['age_group'] == '65+' %}selected{% endif %}>65+</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Daily Site Time:</label>
+                    <select name="site_time_group" required>
+                        <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+                        <option value="&lt;30 mins" {% if form_data and form_data['site_time_group'] == "<30 mins" %}selected{% endif %}>&lt;30 mins</option>
+                        <option value="30-50 mins" {% if form_data and form_data['site_time_group'] == "30-50 mins" %}selected{% endif %}>30-50 mins</option>
+                        <option value="51-70 mins" {% if form_data and form_data['site_time_group'] == "51-70 mins" %}selected{% endif %}>51-70 mins</option>
+                        <option value="71-90 mins" {% if form_data and form_data['site_time_group'] == "71-90 mins" %}selected{% endif %}>71-90 mins</option>
+                        <option value="90+ mins" {% if form_data and form_data['site_time_group'] == "90+ mins" %}selected{% endif %}>90+ mins</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Daily Internet Data Usage:</label>
+                    <select name="internet_usage_group" required>
+                        <option value="" disabled {% if not form_data %}selected{% endif %}>Select</option>
+                        <option value="&lt;100 MB" {% if form_data and form_data['internet_usage_group'] == "<100 MB" %}selected{% endif %}>&lt;100 MB</option>
+                        <option value="100-125 MB" {% if form_data and form_data['internet_usage_group'] == "100-125 MB" %}selected{% endif %}>100-125 MB</option>
+                        <option value="125-175 MB" {% if form_data and form_data['internet_usage_group'] == "125-175 MB" %}selected{% endif %}>125-175 MB</option>
+                        <option value="176-225 MB" {% if form_data and form_data['internet_usage_group'] == "176-225 MB" %}selected{% endif %}>176-225 MB</option>
+                        <option value="226+ MB" {% if form_data and form_data['internet_usage_group'] == "226+ MB" %}selected{% endif %}>226+ MB</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Choose Prediction Model:</label>
+                    <select name="model_choice" required>
+                        <option value="" disabled {% if not model_choice %}selected{% endif %}>Select</option>
+                        <option value="rf" {% if model_choice == 'rf' %}selected{% endif %}>Random Forest</option>
+                        <option value="xgb" {% if model_choice == 'xgb' %}selected{% endif %}>XGBoost</option>
+                        <option value="lr" {% if model_choice == 'lr' %}selected{% endif %}>Logistic Regression</option>
+                    </select>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-predict">Predict</button>
+                    <a href="/" class="btn btn-reset">Make another prediction</a>
+                </div>
+                
+
+                    {% if prediction is not none %}
+                    <div class="prediction-inline">
+                        <strong>
+                            Your ad is likely 
+                            {% if prediction == 1 %}
+                                <span class="positive">clicked</span>
+                            {% else %}
+                                <span class="negative">not clicked</span>
+                            {% endif %}
+                        </strong>
+                    </div>
+                    {% endif %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>
