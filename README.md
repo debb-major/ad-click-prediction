@@ -3,7 +3,7 @@
 This is a machine learning-powered web application that predicts whether a user will click on an advertisement based on their personal and browsing data. Built using Flask and deployed on Render, the app allows users to interactively input data and receive real-time predictions.
 
 ## Live Demo
-[View App on Render](https://my-app-url.onrender.com)
+[View App on Render](https://ad-click-predictor.onrender.com/)
 
 ## Features
 
