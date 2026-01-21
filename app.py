@@ -91,5 +91,6 @@ def result():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))  # Use Render's provided port
+    # port = int(os.environ.get("PORT", 10000))  # Use Render's provided port
+    port = int(os.environ.get("PORT", 5000)) # Run flask app on port 5000 for local testing - inside Docker container
     app.run(debug=False, host='0.0.0.0', port=port) # Set debug=False for production
